@@ -12,22 +12,33 @@ struct ListView: View {
    @EnvironmentObject var viewModel: ListViewModel
 
     var body: some View {
-        List {
-            ForEach(viewModel.items) { item in
-                ListRowView(item: item)
-                    .onTapGesture {
-                        viewModel.toggleCompletionState(for: item)
+        ZStack {
+            if viewModel.items.isEmpty {
+                EmptyStateView()
+                    .transition(AnyTransition.opacity.animation(.easeInOut))
+            } else {
+                List {
+                    ForEach(viewModel.items) { item in
+                        ListRowView(item: item)
+                            .onTapGesture {
+                                viewModel.toggleCompletionState(for: item)
+                            }
                     }
+                    .onDelete(perform: viewModel.deleteItem)
+                    .onMove(perform: viewModel.moveItem)
+                }
+
             }
-            .onDelete(perform: viewModel.deleteItem)
-            .onMove(perform: viewModel.moveItem)
         }
         .navigationTitle("Inbox")
         .navigationBarItems(
-            leading: EditButton(),
+            leading:
+                EditButton()
+                .disabled(viewModel.items.isEmpty)
+            ,
             trailing:
-                NavigationLink("Add", destination: {
-                    AddView()
+                NavigationLink(destination: AddView(), label: {
+                    Image(systemName: "plus")
                 })
         )
         .tint(Color(.label))
@@ -41,5 +52,3 @@ struct ListView: View {
     .environmentObject(ListViewModel())
     .tint(.primary)
 }
-
-
