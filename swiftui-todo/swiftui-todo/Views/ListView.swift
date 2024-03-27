@@ -9,17 +9,18 @@ import SwiftUI
 
 struct ListView: View {
 
-    @State var items: [ItemModel] = [
-        .init(title: "Order food", isCompleted: true),
-        .init(title: "Buy pizza", isCompleted: false)
-    ]
+   @EnvironmentObject var viewModel: ListViewModel
 
     var body: some View {
         List {
-            ForEach(items) { item in
+            ForEach(viewModel.items) { item in
                 ListRowView(item: item)
+                    .onTapGesture {
+                        viewModel.toggleCompletionState(for: item)
+                    }
             }
-
+            .onDelete(perform: viewModel.deleteItem)
+            .onMove(perform: viewModel.moveItem)
         }
         .navigationTitle("Inbox")
         .navigationBarItems(
@@ -37,6 +38,7 @@ struct ListView: View {
     NavigationView {
         ListView()
     }
+    .environmentObject(ListViewModel())
     .tint(.primary)
 }
 

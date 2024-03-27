@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AddView: View {
 
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var viewModel: ListViewModel
     @State var textFieldText: String = ""
 
     var body: some View {
@@ -19,18 +21,22 @@ struct AddView: View {
                     .frame(height: 55)
                     .background(Color(.tertiarySystemBackground))
                     .cornerRadius(10)
-
+                    .autocorrectionDisabled()
+                    .onAppear {
+                        UITextField.appearance().clearButtonMode = .whileEditing
+                    }
                 Button {
-
+                    onSaveButtonPress()
                 } label: {
                     Text("Save".uppercased())
                         .frame(height: 55)
                         .frame(maxWidth: .infinity)
-                        .background(Color(.label))
+                        .background(isReadyToSave() ? Color(.label): Color(.systemGray))
                         .cornerRadius(10)
                         .font(.headline)
                         .foregroundStyle(Color(.systemBackground))
                 }
+                .disabled(!isReadyToSave())
             }
             .padding(.horizontal)
         }
@@ -38,10 +44,22 @@ struct AddView: View {
         .background(Color(.systemGroupedBackground))
         .tint(Color(.label))
     }
+
+    func onSaveButtonPress() {
+        if isReadyToSave() {
+            viewModel.addItem(title: textFieldText)
+            presentationMode.wrappedValue.dismiss()
+        }
+    }
+
+    func isReadyToSave() -> Bool {
+        !textFieldText.isEmpty && textFieldText.count >= 3
+    }
 }
 
 #Preview {
     NavigationView {
         AddView()
     }
+    .environmentObject(ListViewModel())
 }
