@@ -11,7 +11,10 @@ import SwiftUI
 struct swiftui_todoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                ListView()
+            }
+            .tint(.primary)
         }
     }
 }
