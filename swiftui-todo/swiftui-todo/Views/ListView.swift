@@ -19,6 +19,7 @@ struct ListView: View {
         List {
             ForEach(items, id: \.self) { title in
                 ListRowView(title: title)
+                    .frame(height: 40)
             }
 
         }
