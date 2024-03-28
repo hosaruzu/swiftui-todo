@@ -18,10 +18,12 @@ struct ListRowView: View {
                 .strikethrough(item.isCompleted)
             Spacer()
         }
+        .contentShape(Rectangle())
+        .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
     }
 }
 
 #Preview {
-    ListRowView(item: ItemModel(title: "Hinkai", isCompleted: true))
+    ListRowView(item: ItemModel(title: "Hinkali", isCompleted: true))
 }

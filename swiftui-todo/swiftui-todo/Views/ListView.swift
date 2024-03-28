@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ListView: View {
 
-   @EnvironmentObject var viewModel: ListViewModel
+    @EnvironmentObject var viewModel: ListViewModel
 
     var body: some View {
         ZStack {
+            Color(.systemGroupedBackground).ignoresSafeArea()
+
             if viewModel.items.isEmpty {
                 EmptyStateView()
                     .transition(AnyTransition.opacity.animation(.easeInOut))
@@ -27,15 +29,10 @@ struct ListView: View {
                     .onDelete(perform: viewModel.deleteItem)
                     .onMove(perform: viewModel.moveItem)
                 }
-
             }
         }
         .navigationTitle("Inbox")
         .navigationBarItems(
-            leading:
-                EditButton()
-                .disabled(viewModel.items.isEmpty)
-            ,
             trailing:
                 NavigationLink(destination: AddView(), label: {
                     Image(systemName: "plus")
